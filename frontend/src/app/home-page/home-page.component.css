@@ -1,0 +1,11 @@
+.image{
+  background-image: url('../bg.jpg');
+  background-size: cover;
+  height: 800px;
+}
+.image-text{
+  position: absolute;
+  top: 500px;
+  left: 480px;
+  color: white;
+}
