@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {} from 'googlemaps';
 import { ViewChild } from '@angular/core';
 import { Config } from '../config';
+import Marker = google.maps.Marker;
 
 @Component({
   selector: 'app-map-page',
@@ -12,12 +13,14 @@ import { Config } from '../config';
 export class MapPageComponent implements AfterViewInit{
   rooms: any;
   i: number;
+  j: number;
   length: number;
   addresses: Array<string>;
-  marker: Array<any>;
+  marker: Array<Marker>;
   key: string;
   latlng: any;
   myLatLng: any;
+  position: any;
   @ViewChild('gmap', {static: false}) mapElement: any;
   map: google.maps.Map;
   uri = 'http://localhost:3000';
@@ -30,37 +33,42 @@ export class MapPageComponent implements AfterViewInit{
   ngAfterViewInit(): void {
     this.myLatLng = new google.maps.LatLng(42.6553,-71.3247);
     this.map = new google.maps.Map(this.mapElement.nativeElement,{zoom : 15, center: this.myLatLng});
-    this.config = new Config('');
+    this.config = new Config();
     this.key = this.config.key;
     this.addresses = [];
     this.marker = [];
+    this.info = [];
+    this.infowindow = [];
     this.rooms = '';
+    this.j = 0;
     this.getRooms().subscribe( (data) => {
       this.rooms = data;
       this.length = this.rooms.length;
       for ( this.i = 0; this.i < this.length; this.i++ ) {
         this.addresses[this.i] = this.rooms[this.i].address;
+        this.info[this.i] = '<b><u>' + this.rooms[this.i].roomType + ' Room</u></b><br><h6>' + this.rooms[this.i].address +
+          '</h6><br><h6>Rent: </h6>$' + this.rooms[this.i].rent + '<br><br><h6>Details: </h6>' + this.rooms[this.i].details +
+          '<br><br><h6>Contact:</h6>' + this.rooms[this.i].firstName + ' ' +
+          this.rooms[this.i].lastName + '<br>' + this.rooms[this.i].mobile + '<br>';
         this.getLatLng(this.addresses[this.i]).subscribe((data) => {
-          this.info = [];
           this.latlng = data;
           this.latlng = this.latlng.results[0].geometry.location;
-          this.marker[this.i] = new google.maps.Marker({
+          this.marker[this.j] = new google.maps.Marker({
             position: this.latlng,
-            map: this.map
+            map: this.map,
+            title: this.j.toString()
           });
-          this.info[this.i] = '<b>' + this.rooms[this.i].roomType + 'Room</b><br><h3>' + this.rooms[this.i].address +
-            '</h3><br><b>Rent: </b>$' + this.rooms[this.i].rent + '<br>' + this.rooms[this.i].details +
-            '<br><center><b>Contact</b></center><br>' + this.rooms[this.i].firstName + ' ' +
-            this.rooms[this.i].lastName + '<br>' + this.rooms[this.i].mobile + '<br>';
-          this.marker[this.i].addListener('click', function () {
-            this.infowindow = new google.maps.InfoWindow({ content: this.info[this.i] });
-            this.infowindow.open(this.map, this);
+          this.marker[this.j].addListener('click', () => {
+            this.position = event.target;
+            this.position = this.position.title;
+            this.infowindow = new google.maps.InfoWindow({content: this.info[this.position]});
+            this.infowindow.open(this.map, this.marker[this.position]);
           });
+          this.j++;
         });
       }
     });
   }
-
   getRooms() {
     return this.http.get(`${this.uri}/rooms`);
   }
