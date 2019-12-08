@@ -11,7 +11,8 @@ const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'room', component: RoomFormComponent },
   { path: 'roommate', component: RoommateFormComponent},
-  { path: 'map', component: MapPageComponent}
+  { path: 'map', component: MapPageComponent},
+  { path: 'map/:room', component: MapPageComponent}
 ];
 
 @NgModule({

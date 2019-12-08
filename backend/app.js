@@ -31,6 +31,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.get('/rooms', roomsRouter.findAll);
 app.post('/rooms', roomsRouter.addRoom);
+app.post('/search', roomsRouter.findByCampus);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,15 +2,26 @@ const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://Aravindan:AravSru19@roomiez-ozts7.mongodb.net/test?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true});
 
-exports.findById = function(req, res) {
-        var id = req.params.id;
-        console.log('Retrieving wine: ' + id);
-        db.collection('wines', function(err, collection) {
-            collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-                res.send(item);
+exports.findByCampus = function(req, res) {
+    client.connect(function (err, db) {
+        const dbName = 'roomsdb';
+        var dbs = client.db(dbName);
+        var campus = req.body.campus;
+        var budget = req.body.budget;
+        dbs.collection('rooms', function (err, collection) {
+            collection.find().toArray(function (err, items) {
+                var data = items;
+                var result = [];
+                for(var i = 0; i < data.length; i++){
+                    if( (campus == data[i].campus) && (data[i].rent <= budget)) {
+                        result.push(data[i]);
+                    }
+                }
+                res.send(result);
             });
         });
-    };
+    });
+};
 
 exports.findAll = function(req, res) {
     client.connect(function (err, db) {

@@ -17,6 +17,15 @@
     </div>
 
     <div class="form-group">
+      <label for="campus">Nearby Campus</label>
+      <select class="form-control" id="campus" required [(ngModel)]="model.campus" name="campus">
+        <option>North</option>
+        <option>South</option>
+        <option>East</option>
+      </select>
+    </div>
+
+    <div class="form-group">
       <label for="mobile">Mobile</label>
       <input type="text" class="form-control" id="mobile" minlength="10" required [(ngModel)]="model.mobile" name="mobile" #mobile="ngModel">
       <div *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)"

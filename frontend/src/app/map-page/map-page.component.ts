@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {} from 'googlemaps';
 import { ViewChild } from '@angular/core';
 import { Config } from '../config';
+import { ActivatedRoute } from '@angular/router';
 import Marker = google.maps.Marker;
 
 @Component({
@@ -21,6 +22,7 @@ export class MapPageComponent implements AfterViewInit{
   latlng: any;
   myLatLng: any;
   position: any;
+  search: any;
   @ViewChild('gmap', {static: false}) mapElement: any;
   map: google.maps.Map;
   uri = 'http://localhost:3000';
@@ -28,11 +30,12 @@ export class MapPageComponent implements AfterViewInit{
   info: Array<string>;
   infowindow: any;
   config: Config;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
   ngAfterViewInit(): void {
     this.myLatLng = new google.maps.LatLng(42.6553,-71.3247);
     this.map = new google.maps.Map(this.mapElement.nativeElement,{zoom : 15, center: this.myLatLng});
+    this.search = this.route.snapshot.paramMap.get('room');
     this.config = new Config();
     this.key = this.config.key;
     this.addresses = [];
@@ -43,6 +46,9 @@ export class MapPageComponent implements AfterViewInit{
     this.j = 0;
     this.getRooms().subscribe( (data) => {
       this.rooms = data;
+      if (this.search) {
+        this.rooms = JSON.parse(this.search);
+      }
       this.length = this.rooms.length;
       for ( this.i = 0; this.i < this.length; this.i++ ) {
         this.addresses[this.i] = this.rooms[this.i].address;
