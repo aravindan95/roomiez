@@ -61,3 +61,15 @@
     <button type="submit" class="btn btn-success">Submit</button>
   </form>
 </div>
+<div class = "delete-container">
+  <h3> Want to remove your ad? </h3>
+  <form #removeForm="ngForm" (ngSubmit)="removeListing()">
+    <div class="form-group">
+      <label for="id">Listing ID</label>
+      <input type="text" class="form-control" id="id" required [(ngModel)]="identifier.id" name="id">
+    </div>
+    <button type="submit" class="btn btn-success">Remove</button>
+  </form>
+</div>
+<div class = "delete-overlay">
+</div>

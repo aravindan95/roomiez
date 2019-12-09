@@ -23,6 +23,26 @@ exports.findByCampus = function(req, res) {
     });
 };
 
+exports.findById = function(req, res) {
+    client.connect(function (err, db) {
+        const dbName = 'roomsdb';
+        var dbs = client.db(dbName);
+        var id = req.body.id;
+        dbs.collection('rooms', function (err, collection) {
+            collection.find().toArray(function (err, items) {
+                var data = items;
+                var result = [];
+                for(var i = 0; i < data.length; i++){
+                    if(id == data[i]._id) {
+                        result.push(data[i]);
+                    }
+                }
+                res.send(result);
+            });
+        });
+    });
+};
+
 exports.findAll = function(req, res) {
     client.connect(function (err, db) {
         const dbName = 'roomsdb';
@@ -73,10 +93,10 @@ exports.updateWine = function(req, res) {
     });
 };
 
-exports.deleteWine = function(req, res) {
-    var id = req.params.id;
-    console.log('Deleting wine: ' + id);
-    db.collection('wines', function(err, collection) {
+exports.deleteRoom = function(req, res) {
+    var id = req.body.id;
+    console.log('Deleting room: ' + id);
+    db.collection('rooms', function(err, collection) {
         collection.remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
             if (err) {
                 res.send({'error':'An error has occurred - ' + err});

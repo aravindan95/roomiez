@@ -1,11 +1,11 @@
 .image{
   background-image: url('../bg.jpg');
   background-size: cover;
-  height: 800px;
+  height: 720px;
 }
 .image-text{
   position: absolute;
-  top: 500px;
-  left: 480px;
+  top: 360px;
+  left: 550px;
   color: white;
 }
