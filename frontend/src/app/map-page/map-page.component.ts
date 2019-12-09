@@ -17,12 +17,17 @@ export class MapPageComponent implements AfterViewInit{
   j: number;
   length: number;
   addresses: Array<string>;
+  copy: Array<string>;
   marker: Array<Marker>;
   key: string;
   latlng: any;
   myLatLng: any;
   position: any;
   search: any;
+  valid: string;
+  valid1: string;
+  ans: boolean;
+  ans1: boolean;
   @ViewChild('gmap', {static: false}) mapElement: any;
   map: google.maps.Map;
   uri = 'http://localhost:3000';
@@ -52,13 +57,27 @@ export class MapPageComponent implements AfterViewInit{
       this.length = this.rooms.length;
       for ( this.i = 0; this.i < this.length; this.i++ ) {
         this.addresses[this.i] = this.rooms[this.i].address;
+        this.copy = this.addresses;
         this.info[this.i] = '<b><u>' + this.rooms[this.i].roomType + ' Room</u></b><br><h6>' + this.rooms[this.i].address +
           '</h6><br><h6>Rent: </h6>$' + this.rooms[this.i].rent + '<br><br><h6>Details: </h6>' + this.rooms[this.i].details +
           '<br><br><h6>Contact:</h6>' + this.rooms[this.i].firstName + ' ' +
           this.rooms[this.i].lastName + '<br>' + this.rooms[this.i].mobile + '<br>';
         this.getLatLng(this.addresses[this.i]).subscribe((data) => {
           this.latlng = data;
+          this.valid = (this.latlng.results[0].address_components[0].long_name
+            + ' ' + this.latlng.results[0].address_components[1].long_name).toLowerCase();
+          this.valid1 = (this.latlng.results[0].address_components[0].long_name
+            + ' ' + this.latlng.results[0].address_components[1].short_name).toLowerCase();
           this.latlng = this.latlng.results[0].geometry.location;
+          for ( this.i = 0; this.i < this.length; this.i++ ) {
+            this.copy[this.i] = this.copy[this.i].toLowerCase();
+            this.ans = this.copy[this.i].includes(this.valid);
+            this.ans1 = this.copy[this.i].includes(this.valid);
+            if ((this.ans === true) || (this.ans1 === true)) {
+              this.j = this.i;
+              break;
+            }
+          }
           this.marker[this.j] = new google.maps.Marker({
             position: this.latlng,
             map: this.map,
