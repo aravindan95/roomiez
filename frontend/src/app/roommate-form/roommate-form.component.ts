@@ -45,6 +45,9 @@ export class RoommateFormComponent {
     this.http.post('http://localhost:3000/retrieve', this.id, {headers: this.headers}).subscribe((data) => {
       this.room = data;
       this.overlay = document.getElementsByClassName('delete-overlay');
+      if (this.room.length === 0) {
+        this.overlay[0].innerHTML = '<h3> Please enter a correct listing ID </h3>';
+      }
       this.overlay[0].innerHTML = '<h3>' + this.room[0].address + '</h3><br><button id="delete" class="btn btn-success">Delete</button>';
       this.button = document.getElementById('delete');
       this.button.addEventListener('click', () => {

@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var roomsRouter = require('./routes/rooms');
 var app = express();
 
@@ -28,7 +27,6 @@ app.use(function(req, res, next) {
   next();
 });
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.get('/rooms', roomsRouter.findAll);
 app.post('/rooms', roomsRouter.addRoom);
 app.post('/search', roomsRouter.findByCampus);
