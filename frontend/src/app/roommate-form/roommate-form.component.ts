@@ -59,7 +59,7 @@ export class RoommateFormComponent {
             this.overlay[0].innerHTML = '<h3> Your Listing is removed! Thanks for using UML Roomiez </h3>';
             setTimeout(() => {
               this.router.navigate(['map']);
-              }, 5000);
+              }, 3000);
           }
       });
       });
